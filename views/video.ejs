@@ -1,43 +1,64 @@
 <%- include("header") -%>
 
-<main class="main__video">
+<main>
   <section class="video">
     <div class="heading">
       <h1 class="heading__maintitle"><%= video.title %></h1>
     </div>
 
-    <video controls class="video__video">
-      <source src="<%= video.video %>" type="video/mp4" />
-    </video>
-  
+    <div class="video">
+      <video controls class="video__video">
+        <source src="<%= video.video %>" type="video/mp4" />
+      </video>
+    
 
-    <div class="video__description"><%= video.description %></div>
+      <div class="video__description"><%= video.description %></div>
 
-    <div class="video__related">
-      <h2 class="video__relatedTitle">Tengd myndbönd</h2>
+      <div class="video__related">
+        <h2 class="video__relatedTitle">Tengd myndbönd</h2>
+      </div>
+
+      <div class="video__row">
+        <div class="video__col">
+          <% video.related.forEach((video)=> { %>
+            <a href="/<%= video.id %>" class="listItem">
+                <div class="listItem__poster">
+                    <img src="<%= video.poster %>" alt="">
+                    <div class="listItem__duration">
+                        <%= Math.floor(video.duration/60) %>
+                        :
+                        <% if(video.duration-Math.floor(video.duration/60)*60<10) { %>
+                            0<%= video.duration-Math.floor(video.duration/60)*60 %>
+                        <% } else { %>
+                        <%= video.duration-Math.floor(video.duration/60)*60 %>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="listItem__bottom">
+                    <div class="listItem__texts">
+                        <h2 class="listItem__title">
+                            <%= video.title %>
+                        </h2>
+                        <% if((Date.now()-video.created)<86400000){ %>
+                            Fyrir <%= Math.floor((Date.now()-video.created)/3600000) %> klukkustund/klukkustundum síðan
+                        <% } else if((Date.now()-video.created)<604800000){ %>
+                            Fyrir <%= Math.floor((Date.now()-video.created)/86400000) %> degi/dögum síðan
+                        <% } else if((Date.now()-video.created)<2592000000){ %>
+                            Fyrir <%= Math.floor((Date.now()-video.created)/604800000) %> viku/vikum síðan
+                        <% } else if((Date.now()-video.created)<31536000000){ %>
+                            Fyrir <%= Math.floor((Date.now()-video.created)/2592000000) %> mánuði/mánuðum síðan
+                        <% } else{ %>
+                            Fyrir <%= Math.floor((Date.now()-video.created)/31536000000) %> ári/árum síðan
+                        <% } %>
+                    </div>
+                </div>
+            </a>
+            <% }) %>
+        </div>
+      </div>
+      
     </div>
-    <%= JSON.stringify(video.related) %>
-    <% categories.forEach((category)=> { %>
-      <h2 class="heading__category"><%= category.title %></h2>
-
-      <div class="list__col">
-        <% category.videos.forEach((video)=> { %>
-        <a href="/<%= video.id %>" class="listItem">
-          <div class="listItem__poster">
-            <img src="<%= video.poster %>" alt="" />
-            <div class="listItem__duration">
-              <%= Math.floor(video.duration/60) %>
-              :
-              <% if(video.duration-Math.floor(video.duration/60)*60<10) { %>
-                  0<%= video.duration-Math.floor(video.duration/60)*60 %>
-              <% } else { %>
-              <%= video.duration-Math.floor(video.duration/60)*60 %>
-              <% } %>
-            </div>
-          </div>
-          
-        </a>
-        <% }) %>
+    
     <div class="hline"></div>
 
     <footer class="video__footer">
